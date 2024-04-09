@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/auth")
 @RestController
 public class AuthController {
@@ -33,6 +33,10 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         return authService.registerUser(signUpRequest);
     }
+//    @PostMapping("/add/admin")
+//    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+//        return authService.registerUser(signUpRequest);
+//    }
     @PostMapping("/sign-out")
     public ResponseEntity<?> logoutUser() {
         return authService.logoutUser();
