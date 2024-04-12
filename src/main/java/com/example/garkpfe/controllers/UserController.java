@@ -3,10 +3,8 @@ package com.example.garkpfe.controllers;
 import com.example.garkpfe.entities.User;
 import com.example.garkpfe.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,5 +22,9 @@ public class UserController {
     public User desassignUser(@RequestParam("userId")Integer userId,
                                    @RequestParam("roleId") Integer roleId){
         return userService.desassignUser(userId, roleId);
+    }
+    @GetMapping("/getAllUsers")
+    public ResponseEntity<?> getAllUsers() {
+        return userService.getAllUsers();
     }
 }

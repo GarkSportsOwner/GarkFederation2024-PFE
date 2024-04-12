@@ -1,4 +1,6 @@
-package com.example.garkpfe.services;
+package com.example.garkpfe.services.servicesImpl;
+import com.example.garkpfe.services.AuthService;
+import org.springframework.security.core.GrantedAuthority;
 
 import com.example.garkpfe.entities.ERole;
 import com.example.garkpfe.entities.RefreshToken;
@@ -18,6 +20,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,10 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,28 +65,41 @@ public class AuthServiceImpl implements AuthService {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+        // Generate JWT token
+        String token = jwtUtils.generateTokenFromUsername(userDetails.getUsername());
 
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-
+        // Generate JWT refresh token
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
+        // Generate response cookies
+        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
         ResponseCookie jwtRefreshCookie = jwtUtils.generateRefreshJwtCookie(refreshToken.getToken());
 
+        // Extract user roles
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        // Construct JWT response object with access token
+        JwtResponse jwtResponse = new JwtResponse(
+                userDetails.getId(),
+                userDetails.getUsername(),
+                userDetails.getEmail(),
+                roles,
+                "Bearer",
+                token
+        );
+
+        // Return response with cookies and JWT response object
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
-                .body(new JwtResponse(userDetails.getId(),
-                        userDetails.getUsername(),
-                        userDetails.getEmail(),
-                        roles));
+                .body(jwtResponse);
     }
 
 
+
     @Override
-    @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByName(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
@@ -116,10 +129,10 @@ public class AuthServiceImpl implements AuthService {
                         roles.add(adminRole);
 
                         break;
-                    case "mod":
-                        Role modRole = roleRepository.findByName(ERole.ROLE_MANAGER)
+                    case "manager":
+                        Role managerRole = roleRepository.findByName(ERole.ROLE_MANAGER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(modRole);
+                        roles.add(managerRole);
 
                         break;
                     default:
@@ -137,10 +150,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-
-    public ResponseEntity<?> logoutUser() {
+    public ResponseEntity<?> logout() {
         Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principle.toString() != "anonymousUser") {
+        if (!"anonymousUser".equals(principle.toString())) {
             Integer userId = ((UserDetailsImpl) principle).getId();
             refreshTokenService.deleteByUserId(userId);
         }
@@ -158,7 +170,7 @@ public class AuthServiceImpl implements AuthService {
     public ResponseEntity<?> refreshToken(HttpServletRequest request) {
         String refreshToken = jwtUtils.getJwtRefreshFromCookies(request);
 
-        if ((refreshToken != null) && (refreshToken.length() > 0)) {
+        if (!refreshToken.isEmpty()) {
             return refreshTokenService.findByToken(refreshToken)
                     .map(refreshTokenService::verifyExpiration)
                     .map(RefreshToken::getUser)
@@ -173,7 +185,10 @@ public class AuthServiceImpl implements AuthService {
                             "Refresh token is not in database!"));
         }
         return ResponseEntity.badRequest().body(new MessageResponse("Refresh Token is empty!"));
-    }    }
+    }
+
+
+}
 
 
 

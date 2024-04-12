@@ -3,6 +3,7 @@ package com.example.garkpfe.controllers;
 import com.example.garkpfe.payload.request.SignupRequest;
 import com.example.garkpfe.services.AuthService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/manager")
+@RequiredArgsConstructor
 public class ManagerController {
 
-    @Autowired
-    private AuthService authService;
+
+    private  final AuthService authService;
 
 
     @PreAuthorize("hasRole('MANAGER')or hasRole('ADMIN')")
