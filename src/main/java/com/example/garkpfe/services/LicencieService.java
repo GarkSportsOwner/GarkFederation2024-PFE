@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 public interface LicencieService {
     ResponseEntity<?> getAllLicencies();
     ResponseEntity<?> createLicencie(LicencieRequest licencieRequest);
-    ResponseEntity<?> getAthleteById(Integer id);
+    ResponseEntity<?> getLicencieById(Integer id);
     ResponseEntity<?> updateLicencie(Integer id, Licencie licencie);
     ResponseEntity<?> deleteLicencie(Integer id);
 }

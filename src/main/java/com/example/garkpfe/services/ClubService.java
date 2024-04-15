@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 
 public interface ClubService {
     ResponseEntity<?> getAllClubs();
-    ResponseEntity<?> create(ClubRequest clubRequest);
+    ResponseEntity<?> createClub(ClubRequest clubRequest);
     ResponseEntity<?> getClubById(Integer id);
-    ResponseEntity<?> update(Integer id, Club club);
-    ResponseEntity<?> delete(Integer id);
+    ResponseEntity<?> updateClub(Integer id, Club club);
+    ResponseEntity<?> deleteClub(Integer id);
 }

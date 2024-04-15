@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -22,5 +24,11 @@ private String email;
 private String siteWeb;
 private String logo;
 
+@OneToMany(mappedBy = "federation" , cascade = CascadeType.ALL)
 
+    private List<Club> clubs;
+
+
+    public Federation(String name, String email, String address, String siteWeb, String logo) {
+    }
 }

@@ -34,7 +34,7 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public ResponseEntity<?> create(@Valid ClubRequest clubRequest) {
+    public ResponseEntity<?> createClub(@Valid ClubRequest clubRequest) {
         if (clubRepository.existsByName(clubRequest.getName())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Club name is already taken!"));
         }
@@ -47,9 +47,8 @@ public class ClubServiceImpl implements ClubService {
         clubRepository.save(club);
         return ResponseEntity.ok(new MessageResponse("Club created successfully"));
     }
-
-    @Override
-    public ResponseEntity<?> update(Integer id, Club club) {
+@Override
+    public ResponseEntity<?> updateClub(Integer id, Club club) {
         Optional<Club> clubOptional = clubRepository.findById(id);
         if (clubOptional.isPresent()) {
             Club existingClub = clubOptional.get();
@@ -66,7 +65,7 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public ResponseEntity<?> delete(Integer id) {
+    public ResponseEntity<?> deleteClub(Integer id) {
         if (clubRepository.existsById(id)) {
             clubRepository.deleteById(id);
             return ResponseEntity.ok(new MessageResponse("Club deleted successfully"));

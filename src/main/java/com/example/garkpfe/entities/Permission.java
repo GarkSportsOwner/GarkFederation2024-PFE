@@ -6,29 +6,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "licencie")
-public class Licencie {
-
+@Table(name = "permission")
+public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Integer id;
     private String name;
-    private String email;
-    private String status;
-
-    @ManyToOne
-    @JoinColumn(name = "club_id")
-    private Club club;
-
-    public Licencie(String name, String email, String status) {
-        this.name=name;
-        this.email = email;
-        this.status = status;
-    }
+    private String description;
+    @ManyToMany(mappedBy = "permissions")
+    private List<Role> roles;
 }

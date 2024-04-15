@@ -12,4 +12,6 @@ public interface FederationRepository extends JpaRepository<Federation,Integer> 
     Boolean existsByName(String name);
     Boolean existsByEmail(String email);
 
+    boolean existsBySiteWeb(String siteWeb);
+
 }
