@@ -1,11 +1,13 @@
 package com.example.garkpfe.services.servicesImpl;
 
 import com.example.garkpfe.entities.Athlete;
+import com.example.garkpfe.entities.Club;
 import com.example.garkpfe.entities.Licencie;
 import com.example.garkpfe.payload.request.AthleteRequest;
 import com.example.garkpfe.payload.request.LicencieRequest;
 import com.example.garkpfe.payload.response.MessageResponse;
 import com.example.garkpfe.repositories.AthleteRepository;
+import com.example.garkpfe.repositories.ClubRepository;
 import com.example.garkpfe.repositories.LicencieRepository;
 import com.example.garkpfe.services.AthleteService;
 import jakarta.validation.Valid;
@@ -20,6 +22,8 @@ import java.util.Optional;
 public class AthleteServiceImpl implements AthleteService {
     @Autowired
     private AthleteRepository athleteRepository;
+    @Autowired
+    private ClubRepository clubRepository;
 
     public ResponseEntity<List<Athlete>> getAllAthletes() {
         List<Athlete> athletes = athleteRepository.findAll();
@@ -69,6 +73,7 @@ public class AthleteServiceImpl implements AthleteService {
             return new ResponseEntity<>("Athlete not found", HttpStatus.NOT_FOUND);
         }
     }
+
 }
 
 

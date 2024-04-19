@@ -1,5 +1,6 @@
 package com.example.garkpfe.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class PermissionSupplementaire {
     private Integer id;
     private String name;
     private String description;
+    @JsonIgnore
     @ManyToMany(mappedBy = "permissionsSupplementaires")
     private List<User> users = new ArrayList<>();
 

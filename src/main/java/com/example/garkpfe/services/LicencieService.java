@@ -1,6 +1,7 @@
 package com.example.garkpfe.services;
 
 import com.example.garkpfe.entities.Licencie;
+import com.example.garkpfe.entities.User;
 import com.example.garkpfe.payload.request.LicencieRequest;
 import org.springframework.http.ResponseEntity;
 
@@ -10,4 +11,7 @@ public interface LicencieService {
     ResponseEntity<?> getLicencieById(Integer id);
     ResponseEntity<?> updateLicencie(Integer id, Licencie licencie);
     ResponseEntity<?> deleteLicencie(Integer id);
+    public Licencie addLicencieToClub(Integer licencieId, Integer clubId) ;
+
+
 }

@@ -1,8 +1,10 @@
 package com.example.garkpfe.services.servicesImpl;
 
+import com.example.garkpfe.entities.Club;
 import com.example.garkpfe.entities.Licencie;
 import com.example.garkpfe.payload.request.LicencieRequest;
 import com.example.garkpfe.payload.response.MessageResponse;
+import com.example.garkpfe.repositories.ClubRepository;
 import com.example.garkpfe.repositories.LicencieRepository;
 import com.example.garkpfe.services.LicencieService;
 import jakarta.validation.Valid;
@@ -17,6 +19,8 @@ import java.util.Optional;
 public class LicencieServiceImpl  implements LicencieService {
     @Autowired
     private LicencieRepository licencieRepository;
+    @Autowired
+    private ClubRepository clubRepository;
 
     public ResponseEntity<List<Licencie>> getAllLicencies() {
         List<Licencie> licencies = licencieRepository.findAll();
@@ -40,7 +44,7 @@ public class LicencieServiceImpl  implements LicencieService {
 
         Licencie licencie = new Licencie(licencieRequest.getName(), licencieRequest.getEmail(), licencieRequest.getStatus());
         licencieRepository.save(licencie);
-        return ResponseEntity.ok(new MessageResponse("Club created successfully"));
+        return ResponseEntity.ok(new MessageResponse("Licenced created successfully"));
     }
 
     public ResponseEntity<?> updateLicencie(Integer id, Licencie licencie) {
@@ -63,6 +67,21 @@ public class LicencieServiceImpl  implements LicencieService {
             return ResponseEntity.ok(new MessageResponse("Licencie deleted successfully"));
         } else {
             return new ResponseEntity<>("Licencie not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public Licencie addLicencieToClub(Integer licencieId, Integer clubId) {
+        Optional<Licencie> licencieOptional = licencieRepository.findById(licencieId);
+        Optional<Club> clubOptional = clubRepository.findById(clubId);
+
+        if (licencieOptional.isPresent() && clubOptional.isPresent()) {
+            Licencie licencie = licencieOptional.get();
+            Club club = clubOptional.get();
+
+            licencie.setClub(club);
+            return licencieRepository.save(licencie);
+        } else {
+            throw new RuntimeException("Licencie or Club not found");
         }
     }
 }

@@ -34,6 +34,7 @@ public class User {
     private List<PermissionSupplementaire> permissionsSupplementaires;
 
 
+
     public Integer getId() {
         return id;
     }

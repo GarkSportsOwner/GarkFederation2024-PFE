@@ -10,4 +10,5 @@ public interface AthleteService {
     ResponseEntity<?> getAthleteById(Integer id);
     ResponseEntity<?> updateAthlete(Integer id, Athlete athlete);
     ResponseEntity<?> deleteAthlete(Integer id);
+
 }

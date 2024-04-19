@@ -4,6 +4,7 @@ import com.example.garkpfe.entities.Role;
 import com.example.garkpfe.entities.User;
 import com.example.garkpfe.exceptions.UserAlreadyExistsException;
 import com.example.garkpfe.exceptions.UserNotFoundException;
+import com.example.garkpfe.payload.request.SignupRequest;
 import com.example.garkpfe.repositories.RoleRepository;
 import com.example.garkpfe.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +16,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
+    ResponseEntity<?> addUser(SignupRequest signupRequest);
 
     ResponseEntity<?> getAllUsers();
-
     ResponseEntity<?> getUserById(Integer id);
     ResponseEntity<?> updateUser(Integer id, User user);
     ResponseEntity<?> deleteUser(Integer id);

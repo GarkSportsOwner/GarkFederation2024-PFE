@@ -30,5 +30,10 @@ private String logo;
 
 
     public Federation(String name, String email, String address, String siteWeb, String logo) {
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.siteWeb = siteWeb;
+        this.logo = logo;
     }
 }
